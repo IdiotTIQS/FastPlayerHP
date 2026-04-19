@@ -11,7 +11,9 @@ FastPlayerHP is a Paper/Spigot plugin that displays player health above each pla
   - `hearts` -> `❤ 18.0`
   - `hearts_and_max` -> `❤ 18.0/20.0`
 - Event-driven updates with low-frequency polling fallback
+- Per-tick follow updates for smoother name movement
 - Distance-based visibility control
+- Configurable text template, colors, and decimals
 
 ## Commands
 

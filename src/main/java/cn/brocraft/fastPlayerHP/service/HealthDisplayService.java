@@ -2,6 +2,7 @@ package cn.brocraft.fastPlayerHP.service;
 
 import cn.brocraft.fastPlayerHP.FastPlayerHP;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -13,6 +14,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,8 +40,6 @@ public class HealthDisplayService {
         }
     }
 
-    private static final String HEART_ICON = "❤";
-
     private final FastPlayerHP plugin;
     private final NamespacedKey ownerKey;
 
@@ -49,6 +49,10 @@ public class HealthDisplayService {
     private double yOffset = 2.2D;
     private double visibleDistance = 32.0D;
     private long pollIntervalTicks = 20L;
+    private String heartSymbol = "&c❤";
+    private String heartsFormat = "{heart} &f{health}";
+    private String heartsAndMaxFormat = "{heart} &f{health}&7/&f{max_health}";
+    private int healthDecimals = 1;
     private boolean enabled = true;
 
     public HealthDisplayService(FastPlayerHP plugin) {
@@ -62,6 +66,10 @@ public class HealthDisplayService {
         visibleDistance = Math.max(4.0D, plugin.getConfig().getDouble("visible-distance", 32.0D));
         pollIntervalTicks = Math.max(10L, plugin.getConfig().getLong("poll-interval-ticks", 20L));
         displayMode = DisplayMode.fromInput(plugin.getConfig().getString("display-mode", "hearts_and_max"));
+        heartSymbol = plugin.getConfig().getString("text.heart-symbol", "&c❤");
+        heartsFormat = plugin.getConfig().getString("text.hearts-format", "{heart} &f{health}");
+        heartsAndMaxFormat = plugin.getConfig().getString("text.hearts-and-max-format", "{heart} &f{health}&7/&f{max_health}");
+        healthDecimals = Math.max(0, Math.min(2, plugin.getConfig().getInt("text.health-decimals", 1)));
 
         if (!enabled) {
             cleanup();
@@ -151,6 +159,17 @@ public class HealthDisplayService {
             updateStandPosition(player);
             updateStandText(player);
             updateVisibilityFor(player);
+        }
+    }
+
+    public void tickFollow() {
+        if (!enabled) {
+            return;
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            ensureStand(player);
+            updateStandPosition(player);
         }
     }
 
@@ -271,15 +290,28 @@ public class HealthDisplayService {
     private String formatHealth(Player player) {
         double health = Math.max(0.0D, player.getHealth());
         double maxHealth = player.getMaxHealth();
+        String heart = colorize(heartSymbol);
+        String healthText = formatNumber(health);
+        String maxHealthText = formatNumber(maxHealth);
 
-        if (displayMode == DisplayMode.HEARTS) {
-            return HEART_ICON + " " + formatOneDecimal(health);
-        }
-        return HEART_ICON + " " + formatOneDecimal(health) + "/" + formatOneDecimal(maxHealth);
+        String template = displayMode == DisplayMode.HEARTS ? heartsFormat : heartsAndMaxFormat;
+        return applyTemplate(template, heart, healthText, maxHealthText);
     }
 
-    private String formatOneDecimal(double value) {
-        return String.format(java.util.Locale.US, "%.1f", value);
+    private String applyTemplate(String template, String heart, String healthText, String maxHealthText) {
+        String raw = template
+                .replace("{heart}", heart)
+                .replace("{health}", healthText)
+                .replace("{max_health}", maxHealthText);
+        return colorize(raw);
+    }
+
+    private String colorize(String input) {
+        return ChatColor.translateAlternateColorCodes('&', input);
+    }
+
+    private String formatNumber(double value) {
+        return String.format(Locale.US, "%." + healthDecimals + "f", value);
     }
 
     private ArmorStand getStand(Player owner) {

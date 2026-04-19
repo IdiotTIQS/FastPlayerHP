@@ -8,6 +8,15 @@ display-mode: hearts_and_max
 # Vertical offset from player feet for the invisible armor stand name.
 y-offset: 2.2
 
+# Text style configuration:
+# - Supports Minecraft color codes with '&' (example: &c, &f, &7, &l)
+# - Placeholders: {heart}, {health}, {max_health}
+text:
+  heart-symbol: "&c❤"
+  hearts-format: "{heart} &f{health}"
+  hearts-and-max-format: "{heart} &f{health}&7/&f{max_health}"
+  health-decimals: 1
+
 # View distance (blocks): only players inside this radius can see the text.
 visible-distance: 32
 
