@@ -1,0 +1,17 @@
+# Enables or disables all health displays.
+enabled: true
+
+# hearts: "❤ currentHealth"
+# hearts_and_max: "❤ currentHealth/maxHealth"
+display-mode: hearts_and_max
+
+# Vertical offset from player feet for the invisible armor stand name.
+y-offset: 2.2
+
+# View distance (blocks): only players inside this radius can see the text.
+visible-distance: 32
+
+# Fallback refresh interval (ticks). 20 ticks = 1 second.
+# Health updates are still event-driven; this is only a safety sync.
+poll-interval-ticks: 20
+

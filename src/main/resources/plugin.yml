@@ -1,10 +1,21 @@
 name: FastPlayerHP
-description: $description
+description: Show player health above head with an invisible armor stand.
 version: '${version}'
 
 main: cn.brocraft.fastPlayerHP.FastPlayerHP
-api-version: '1.21.8'
+api-version: '1.21'
 load: POSTWORLD
 
 authors: [ TIQS ]
 website: Distance.icu
+
+commands:
+  fphp:
+    description: FastPlayerHP admin command
+    usage: /fphp <reload|toggle|mode>
+    permission: fastplayerhp.admin
+
+permissions:
+  fastplayerhp.admin:
+    description: Allows using FastPlayerHP admin commands.
+    default: op
