@@ -5,7 +5,7 @@ FastPlayerHP is a Paper/Spigot plugin that displays each player's health above t
 ## Compatibility
 
 - Best-effort compatibility: `1.21+` (targeting `1.21` API baseline)
-- No NMS, no external dependencies
+- No NMS, no external dependencies most time
 - Recommended runtime: Paper
 
 ## Features
