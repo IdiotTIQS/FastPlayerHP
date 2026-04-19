@@ -1,0 +1,10 @@
+name: FastPlayerHP
+description: $description
+version: '${version}'
+
+main: cn.brocraft.fastPlayerHP.FastPlayerHP
+api-version: '1.21.8'
+load: POSTWORLD
+
+authors: [ TIQS ]
+website: Distance.icu
