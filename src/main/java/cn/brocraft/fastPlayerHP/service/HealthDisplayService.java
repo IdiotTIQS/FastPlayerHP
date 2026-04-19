@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -271,10 +270,7 @@ public class HealthDisplayService {
 
     private String formatHealth(Player player) {
         double health = Math.max(0.0D, player.getHealth());
-        Attribute attribute = Attribute.GENERIC_MAX_HEALTH;
-        double maxHealth = player.getAttribute(attribute) != null
-                ? player.getAttribute(attribute).getValue()
-                : 20.0D;
+        double maxHealth = player.getMaxHealth();
 
         if (displayMode == DisplayMode.HEARTS) {
             return HEART_ICON + " " + formatOneDecimal(health);
