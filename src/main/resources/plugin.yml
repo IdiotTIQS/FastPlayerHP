@@ -5,6 +5,7 @@ version: '${version}'
 main: cn.brocraft.fastPlayerHP.FastPlayerHP
 api-version: '1.21'
 load: POSTWORLD
+softdepend: [ ProtocolLib ]
 
 authors: [ TIQS ]
 website: Distance.icu
@@ -12,7 +13,7 @@ website: Distance.icu
 commands:
   fphp:
     description: FastPlayerHP admin command
-    usage: /fphp <reload|toggle|mode>
+    usage: /fphp <reload|toggle|mode|render>
     permission: fastplayerhp.admin
 
 permissions:

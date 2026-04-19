@@ -1,39 +1,102 @@
 # FastPlayerHP
 
-FastPlayerHP is a Paper/Spigot plugin that displays player health above each player's head using an invisible armor stand.
+FastPlayerHP is a Paper/Spigot plugin that displays each player's health above their head using an invisible armor stand.
+
+## Compatibility
+
+- Best-effort compatibility: `1.21+` (targeting `1.21` API baseline)
+- No NMS, no external dependencies
+- Recommended runtime: Paper
 
 ## Features
 
-- 1.21+ best-effort compatibility (no NMS, no external dependencies)
-- Invisible armor stand above player head
-- Heart-style health text
+- Two render backends:
+  - `below_name` (native scoreboard, smoother and recommended)
+  - `armorstand` (custom floating text above head)
+- Optional `protocollib` render selection (auto-fallback to `below_name` when ProtocolLib is absent)
 - Two display modes:
   - `hearts` -> `❤ 18.0`
   - `hearts_and_max` -> `❤ 18.0/20.0`
-- Event-driven updates with low-frequency polling fallback
-- Per-tick follow updates for smoother name movement
+- Event-driven health refresh (damage/heal/respawn/join/world change)
+- Per-tick follow task for smooth movement
+- Low-frequency fallback polling task for safety sync
 - Distance-based visibility control
-- Configurable text template, colors, and decimals
+- Configurable text template, color, symbol, and decimal precision
 
 ## Commands
 
 - `/fphp reload` - reload config
-- `/fphp toggle` - enable/disable plugin display runtime
+- `/fphp toggle` - enable/disable runtime display
 - `/fphp mode <hearts|full|toggle>` - switch display mode
+- `/fphp render <armorstand|belowname|protocollib>` - switch render backend
 
 ## Permission
 
 - `fastplayerhp.admin` (default: op)
 
-## Config
+## Configuration
 
-See `src/main/resources/config.yml`.
+File: `src/main/resources/config.yml`
+
+Default keys:
+
+```yaml
+enabled: true
+render-mode: below_name
+display-mode: hearts_and_max
+top-offset: 0.35
+visible-distance: 32
+poll-interval-ticks: 20
+
+text:
+  heart-symbol: "&c❤"
+  below-name-title: "&c❤"
+  hearts-format: "{heart} &f{health}"
+  hearts-and-max-format: "{heart} &f{health}&7/&f{max_health}"
+  health-decimals: 1
+```
+
+### Text placeholders
+
+- `{heart}`
+- `{health}`
+- `{max_health}`
+
+### Color codes
+
+Use `&` color/format codes, for example:
+
+- `&c` red
+- `&f` white
+- `&7` gray
+- `&l` bold
+
+Example:
+
+```yaml
+text:
+  heart-symbol: "&d❤"
+  hearts-format: "{heart} &b{health}"
+  hearts-and-max-format: "{heart} &b{health}&7/&a{max_health}"
+  health-decimals: 1
+```
+
+After changing config, run:
+
+```text
+/fphp reload
+```
 
 ## Build
 
-```bash
+```bat
+cd /d "E:\MineCraft Server\FastPlayerHP"
 mvn clean package
 ```
 
-Build output jar is generated under `target/`.
+Output jar is generated under `target/`.
 
+## Notes
+
+- If text is too high/low, tune `top-offset`.
+- Large `visible-distance` values increase per-player visibility checks on busy servers.

@@ -1,18 +1,26 @@
 # Enables or disables all health displays.
 enabled: true
 
+# Render backend:
+# - armorstand: custom floating text above the player
+# - below_name: native scoreboard health under player name (recommended for smoothness)
+# - protocollib: optional backend flag (falls back to below_name when ProtocolLib is missing)
+render-mode: below_name
+
 # hearts: "❤ currentHealth"
 # hearts_and_max: "❤ currentHealth/maxHealth"
 display-mode: hearts_and_max
 
-# Vertical offset from player feet for the invisible armor stand name.
-y-offset: 2.2
+# Extra height above the player's current model top (bounding box maxY).
+# Increase if you want text higher; decrease if you want it closer to the head.
+top-offset: 0.35
 
 # Text style configuration:
 # - Supports Minecraft color codes with '&' (example: &c, &f, &7, &l)
 # - Placeholders: {heart}, {health}, {max_health}
 text:
   heart-symbol: "&c❤"
+  below-name-title: "&c❤"
   hearts-format: "{heart} &f{health}"
   hearts-and-max-format: "{heart} &f{health}&7/&f{max_health}"
   health-decimals: 1

@@ -31,6 +31,7 @@ public class FastPlayerHPCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage("§e/fphp reload");
             sender.sendMessage("§e/fphp toggle");
             sender.sendMessage("§e/fphp mode <hearts|full|toggle>");
+            sender.sendMessage("§e/fphp render <armorstand|belowname|protocollib>");
             return true;
         }
 
@@ -46,6 +47,7 @@ public class FastPlayerHPCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(next ? "§aFastPlayerHP enabled." : "§cFastPlayerHP disabled.");
             }
             case "mode" -> handleMode(sender, args);
+            case "render" -> handleRender(sender, args);
             default -> sender.sendMessage("§cUnknown subcommand.");
         }
 
@@ -70,6 +72,23 @@ public class FastPlayerHPCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§aDisplay mode -> " + mode.name().toLowerCase());
     }
 
+    private void handleRender(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage("§eCurrent render mode: " + displayService.getRenderMode().name().toLowerCase());
+            sender.sendMessage("§eUsage: /fphp render <armorstand|belowname|protocollib>");
+            return;
+        }
+
+        HealthDisplayService.RenderMode requested = HealthDisplayService.RenderMode.fromInput(args[1]);
+        displayService.setRenderMode(requested);
+
+        if (requested == HealthDisplayService.RenderMode.PROTOCOLLIB && !displayService.isProtocolLibAvailable()) {
+            sender.sendMessage("§6ProtocolLib not found. Fallback -> below_name");
+        }
+
+        sender.sendMessage("§aRender mode -> " + displayService.getRenderMode().name().toLowerCase());
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> suggestions = new ArrayList<>();
@@ -82,6 +101,7 @@ public class FastPlayerHPCommand implements CommandExecutor, TabCompleter {
             addIfMatch(suggestions, args[0], "reload");
             addIfMatch(suggestions, args[0], "toggle");
             addIfMatch(suggestions, args[0], "mode");
+            addIfMatch(suggestions, args[0], "render");
             return suggestions;
         }
 
@@ -89,6 +109,12 @@ public class FastPlayerHPCommand implements CommandExecutor, TabCompleter {
             addIfMatch(suggestions, args[1], "hearts");
             addIfMatch(suggestions, args[1], "full");
             addIfMatch(suggestions, args[1], "toggle");
+        }
+
+        if (args.length == 2 && "render".equalsIgnoreCase(args[0])) {
+            addIfMatch(suggestions, args[1], "armorstand");
+            addIfMatch(suggestions, args[1], "belowname");
+            addIfMatch(suggestions, args[1], "protocollib");
         }
 
         return suggestions;
